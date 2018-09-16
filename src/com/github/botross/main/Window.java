@@ -79,9 +79,28 @@ public class Window {
 		
 		frame = new JFrame();
 		contentPane = new JPanel();
-		canvas = new Canvas();
+		canvas = new Canvas(width, height); // Might subtract some later for bar at the bottom/side
 		menuBar = new JMenuBar();
 		fileMenu = new FileMenu(frame);
+		
+		frame.addKeyListener(new KeyAdapter() {
+			boolean undoTrig = false;
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_Z && !undoTrig) {
+					canvas.undo();
+					undoTrig = true;
+				}
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_Z) {
+					undoTrig = false;
+				}
+			}
+		});
 		
 		contentPane.setPreferredSize(new Dimension(width, height));
 		contentPane.add(canvas);
